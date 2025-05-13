@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Gallery</title>
+</head>
+<body>
+    <h1>Uploaded Images</h1>
+    {% for image in images %}
+        <div>
+            <img src="{{ image.image.url }}" alt="Image" width="300"><br>
+            Uploaded by: {{ image.user }}<br>
+            Location: {{ image.location }}<br>
+            Timestamp: {{ image.timestamp }}<br><br>
+        </div>
+    {% empty %}
+        <p>No images uploaded yet.</p>
+    {% endfor %}
+</body>
+</html>
