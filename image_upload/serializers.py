@@ -1,7 +1,8 @@
+k# image_upload/serializers.py
 from rest_framework import serializers
-from .models import Image
+from .models import Image  # Assuming you have an Image model for your uploaded images
 
-class ImageSerializer(serializers.ModelSerializer):
+class ImageUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = '__all__'
+        fields = ('id', 'title', 'description', 'image', 'uploaded_at')
