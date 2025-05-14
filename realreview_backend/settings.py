@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'image_upload',
     'corsheaders',
     'images',
+    'django_celery_beat',
 ]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Or your broker
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -52,6 +56,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+
+CRONJOBS = [
+    ('0 0 * * *', 'images.cron.ArchiveOldImagesCronJob')  # Daily at midnight
 ]
 
 CORS_ALLOWED_ORIGINS = [
