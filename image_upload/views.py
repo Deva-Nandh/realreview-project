@@ -1,17 +1,17 @@
-from rest_framework import generics
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .models import Image
 from .serializers import ImageSerializer
 
-# List and Create Image API View
-class ImageListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-
-# Simple List Image Function
-@api_view(['GET'])
-def image_list(request):
-    images = Image.objects.all()
-    serializer = ImageSerializer(images, many=True)
-    return Response(serializer.data)
+@api_view(['GET', 'POST'])
+def image_list_create(request):
+    if request.method == 'GET':
+        images = Image.objects.all()
+        serializer = ImageSerializer(images, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
