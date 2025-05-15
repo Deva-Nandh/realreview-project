@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'images',
     'django_celery_beat',
+    'django_extensions',
 ]
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Or your broker
