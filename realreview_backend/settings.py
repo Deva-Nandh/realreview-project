@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'image_upload',
     'corsheaders',
+    'images',
+    'django_celery_beat',
+    'django_extensions',
 ]
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Or your broker
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -53,8 +59,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+CRONJOBS = [
+    ('0 0 * * *', 'images.cron.ArchiveOldImagesCronJob')  # Daily at midnight
+]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 ROOT_URLCONF = 'realreview_backend.urls'
@@ -143,3 +155,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': None,
 }
+import os
+
+# Media files (uploads)
+MEDIA_URL = '/media/'  # URL to access media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where media files are stored

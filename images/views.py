@@ -1,14 +1,18 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Image
-from .forms import ImageForm
+# images/views.py
 
-def upload_image(request):
-    if request.method == "POST":
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({"message": "Image uploaded successfully!"})
-    else:
-        form = ImageForm()
-    return render(request, 'upload_image.html', {'form': form})
+from rest_framework import viewsets, filters
+from .models import Image
+from .serializers import ImageSerializer
+
+class ImageViewSet(viewsets.ModelViewSet):
+    serializer_class = ImageSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['title', 'description']
+    ordering_fields = ['uploaded_at', 'title']
+
+    def get_queryset(self):
+        archived = self.request.query_params.get('archived')
+        queryset = Image.objects.all()
+        if archived is not None:
+            queryset = queryset.filter(archived=archived.lower() == 'true')
+        return queryset

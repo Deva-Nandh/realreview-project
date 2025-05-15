@@ -1,7 +1,11 @@
-from django.urls import path
-from . import views
+# realreview_backend/images/urls.py
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ImageMetadataViewSet
+
+router = DefaultRouter()
+router.register(r'images', ImageMetadataViewSet)
 
 urlpatterns = [
-    path('upload/', views.upload_image, name='upload_image'),
-    
+    path('api/', include(router.urls)),
 ]
